@@ -30,7 +30,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://192.168.1.201:8001/api/system/overview");
+        const res = await fetch("http://100.127.64.26:8001/api/system/overview");
         const json = await res.json();
         setData(json);
       } catch {

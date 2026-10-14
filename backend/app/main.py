@@ -7,7 +7,9 @@ app = FastAPI(title="Monitor API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3002",
-        "http://192.168.1.201:3002"],
+        "http://192.168.1.201:3002",
+        "http://100.127.64.26:3002"],
+        
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
