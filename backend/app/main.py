@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import psutil, time
 
 app = FastAPI(title="Monitor API", version="0.1.0")
 
@@ -12,20 +13,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+boot_time = psutil.boot_time()
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
 @app.get("/api/system/overview")
 def overview():
-    # Mock data for now — real psutil data comes in Phase 3
+    ram = psutil.virtual_memory()
+    disk = psutil.disk_usage("/")
+    uptime = int(time.time() - boot_time)
     return {
-        "cpu_percent": 12.4,
-        "ram_total_gb": 3.7,
-        "ram_used_gb": 2.9,
-        "ram_percent": 78.4,
-        "disk_total_gb": 198,
-        "disk_used_gb": 6.0,
-        "disk_percent": 4.0,
-        "uptime_seconds": 100800,
+        "cpu_percent": psutil.cpu_percent(interval=0.5),
+        "ram_total_gb": round(ram.total / 1e9, 1),
+        "ram_used_gb": round(ram.used / 1e9, 1),
+        "ram_percent": ram.percent,
+        "disk_total_gb": round(disk.total / 1e9, 1),
+        "disk_used_gb": round(disk.used / 1e9, 1),
+        "disk_percent": disk.percent,
+        "uptime_seconds": uptime,
     }
